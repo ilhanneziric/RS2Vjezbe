@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace eProdaja.Services
 {
-    public interface IProizvodiService
+    public interface IJediniceMjereService
     {
-        IEnumerable<Proizvodi> Get();
-        Proizvodi GetById(int id);
+        IEnumerable<JediniceMjere> Get();
+        JediniceMjere GetById(int id);
     }
 }
