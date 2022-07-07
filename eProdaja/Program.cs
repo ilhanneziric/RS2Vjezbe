@@ -11,10 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddSingleton<IProizvodiService, ProizvodiService>();
 builder.Services.AddTransient<IProizvodiService, ProizvodiService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 builder.Services.AddTransient<IJediniceMjereService, JediniceMjereService>();
-//builder.Services.AddSingleton<IProizvodiService, ProizvodiService>();
+builder.Services.AddTransient<IVrsteProizvodumService, VrsteProizvodumService>();
 
 builder.Services.AddAutoMapper(typeof(IKorisniciService));
 
