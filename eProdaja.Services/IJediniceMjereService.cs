@@ -1,4 +1,6 @@
 ﻿using eProdaja.Model;
+using eProdaja.Model.Requests;
+using eProdaja.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace eProdaja.Services
 {
-    public interface IJediniceMjereService
+    public interface IJediniceMjereService : ICRUDService<JediniceMjere, JediniceMjereSearchObject, JediniceMjereUpsertRequest, JediniceMjereUpsertRequest>
     {
-        IEnumerable<JediniceMjere> Get();
-        JediniceMjere GetById(int id);
     }
 }
