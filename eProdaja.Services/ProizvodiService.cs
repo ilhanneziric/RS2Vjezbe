@@ -14,16 +14,17 @@ namespace eProdaja.Services
 {
     public class ProizvodiService : BaseCRUDService<Model.Proizvodi, Database.Proizvodi, ProizvodiSearchObject, ProizvodiInsertRequest, ProizvodiUpdateRequest>, IProizvodiService
     {
-
-        public ProizvodiService(eProdajaContext context, IMapper mapper) : base(context, mapper)
+        public BaseState BaseState { get; set; }
+        public ProizvodiService(eProdajaContext context, IMapper mapper, BaseState baseState) : base(context, mapper)
         {
+            BaseState = baseState;
         }
 
         public override Model.Proizvodi Insert(ProizvodiInsertRequest insert)
         {
             //return base.Insert(insert);
             var state = BaseState.CreateState("initial");
-            state.Context = Context;
+            //state.Context = Context;
             return state.Insert(insert);
         }
 
@@ -53,10 +54,12 @@ namespace eProdaja.Services
             return GetById(id);
         }
 
-        //public override IEnumerable<Model.Proizvodi> Get(ProizvodiSearchObject search = null)
-        //{
-        //    return base.Get(search);
-        //}
+        public List<string> AllowedActions(int id)
+        {
+            var product = Context.Proizvodis.Find(id);
+            var state = BaseState.CreateState(product.StateMachine);
+            return state.AllowedActions();
+        }
 
         public override IQueryable<Database.Proizvodi> AddFilter(IQueryable<Database.Proizvodi> query, ProizvodiSearchObject search = null)
         {

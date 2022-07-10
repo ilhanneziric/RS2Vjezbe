@@ -1,5 +1,7 @@
-﻿using eProdaja.Model.Requests;
+﻿using AutoMapper;
+using eProdaja.Model.Requests;
 using eProdaja.Services.Database;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +10,19 @@ using System.Threading.Tasks;
 
 namespace eProdaja.Services.ProductStateMachine
 {
-    public abstract class BaseState
+    public class BaseState
     {
+        public IMapper Mapper { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
+        public eProdajaContext Context { get; set; }
+        public BaseState(IServiceProvider serviceProvider, eProdajaContext context, IMapper mapper)
+        {
+            Context = context;
+            ServiceProvider = serviceProvider;
+            Mapper = mapper;
+        }
         public Database.Proizvodi CurrentEntity { get; set; }
         public string CurrentState { get; set; }
-        public eProdajaContext Context { get; set; }
 
         public virtual Model.Proizvodi Insert(ProizvodiInsertRequest request)
         {
@@ -39,19 +49,25 @@ namespace eProdaja.Services.ProductStateMachine
             throw new Exception("not allowed");
         }
 
-        public static BaseState CreateState(string stateName)
+        public BaseState CreateState(string stateName)
         {
             switch (stateName)
             {
                 case "initial":
-                    return new InitialProductState();
+                    return ServiceProvider.GetService<InitialProductState>();
+                    break;
                 case "draft":
-                    return new DraftProductState();
+                    return ServiceProvider.GetService<DraftProductState>();
                 case "active":
-                    return new ActiveProductState();
+                    return ServiceProvider.GetService<ActiveProductState>();
                 default:
                     throw new Exception("not supported");
             }
+        }
+
+        public virtual List<string> AllowedActions()
+        {
+            return new List<string>();
         }
     }
 }

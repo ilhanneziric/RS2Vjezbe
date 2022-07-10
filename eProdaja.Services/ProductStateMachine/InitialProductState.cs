@@ -1,4 +1,6 @@
-﻿using eProdaja.Model.Requests;
+﻿using AutoMapper;
+using eProdaja.Model.Requests;
+using eProdaja.Services.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,24 @@ namespace eProdaja.Services.ProductStateMachine
 {
     public class InitialProductState : BaseState
     {
-        public override void Insert(ProizvodiInsertRequest request)
+        public InitialProductState(IServiceProvider serviceProvider, eProdajaContext context, IMapper mapper) : base(serviceProvider, context, mapper)
         {
+        }
+
+        public override Model.Proizvodi Insert(ProizvodiInsertRequest request)
+        {
+            var set = Context.Set<Proizvodi>();
+
+            Proizvodi entity = Mapper.Map<Proizvodi>(request);
+
+            CurrentEntity = entity;
             CurrentEntity.StateMachine = "draft";
+
+            set.Add(entity);
+
+            Context.SaveChanges();
+
+            return Mapper.Map<Model.Proizvodi>(entity);
         }
     }
 }
