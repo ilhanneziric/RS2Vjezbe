@@ -2,6 +2,7 @@
 using eProdaja.Model.Requests;
 using eProdaja.Model.SearchObjects;
 using eProdaja.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,11 +47,11 @@ namespace eProdaja.Services
 
         public static string GenerateSalt()
         {
-            return Convert.ToBase64String(new byte[16]);
+            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+            var byteArray = new byte[16];
+            provider.GetBytes(byteArray);
 
-            //var buf = new byte[16];
-            //(new RSACryptoServiceProvider()).GetBytes(buf);
-            //return Convert.ToBase64String(buf);
+            return Convert.ToBase64String(byteArray);
         }
 
         public static string GenerateHash(string salt, string password)
@@ -65,6 +66,40 @@ namespace eProdaja.Services
             HashAlgorithm algorithm = HashAlgorithm.Create("SHA1");
             byte[] inArrey = algorithm.ComputeHash(dst);
             return Convert.ToBase64String(inArrey);
+        }
+
+        public override IQueryable<Korisnici> AddFilter(IQueryable<Korisnici> query, KorisniciSearchObject search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.KorisnickoIme))
+            {
+                filteredQuery = filteredQuery.Where(x => x.KorisnickoIme == search.KorisnickoIme);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.NameFTS))
+            {
+                filteredQuery = filteredQuery.Where(x => x.KorisnickoIme.Contains(search.NameFTS) || x.Ime.Contains(search.NameFTS) || x.Prezime.Contains(search.NameFTS));
+            }
+
+            return filteredQuery;
+        }
+
+        public Model.Korisnici Login(string username, string password)
+        {
+            var entity = Context.Korisnicis.Include("KorisniciUloges.Uloga").FirstOrDefault(x => x.KorisnickoIme == username);
+            if(entity == null)
+            {
+                return null;
+            }
+
+            var hash = GenerateHash(entity.LozinkaSalt, password);
+            if(hash != entity.LozinkaHash)
+            {
+                return null;
+            }
+
+            return Mapper.Map<Model.Korisnici>(entity);
         }
     }
 }
