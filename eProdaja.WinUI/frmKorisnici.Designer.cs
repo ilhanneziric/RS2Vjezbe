@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.dgvKorisnici = new System.Windows.Forms.DataGridView();
+            this.Ime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Prezime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RoleNames = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.btnShow = new System.Windows.Forms.Button();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtName = new System.Windows.Forms.TextBox();
@@ -40,12 +44,53 @@
             // dgvKorisnici
             // 
             this.dgvKorisnici.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvKorisnici.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Ime,
+            this.Prezime,
+            this.RoleNames,
+            this.Status});
             this.dgvKorisnici.Location = new System.Drawing.Point(20, 113);
+            this.dgvKorisnici.MultiSelect = false;
             this.dgvKorisnici.Name = "dgvKorisnici";
             this.dgvKorisnici.RowHeadersWidth = 51;
             this.dgvKorisnici.RowTemplate.Height = 29;
+            this.dgvKorisnici.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvKorisnici.Size = new System.Drawing.Size(767, 335);
             this.dgvKorisnici.TabIndex = 0;
+            this.dgvKorisnici.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvKorisnici_CellContentClick);
+            this.dgvKorisnici.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvKorisnici_CellDoubleClick);
+            // 
+            // Ime
+            // 
+            this.Ime.DataPropertyName = "Ime";
+            this.Ime.HeaderText = "Ime";
+            this.Ime.MinimumWidth = 6;
+            this.Ime.Name = "Ime";
+            this.Ime.Width = 125;
+            // 
+            // Prezime
+            // 
+            this.Prezime.DataPropertyName = "Prezime";
+            this.Prezime.HeaderText = "Prezime";
+            this.Prezime.MinimumWidth = 6;
+            this.Prezime.Name = "Prezime";
+            this.Prezime.Width = 125;
+            // 
+            // RoleNames
+            // 
+            this.RoleNames.DataPropertyName = "RoleNames";
+            this.RoleNames.HeaderText = "Uloge";
+            this.RoleNames.MinimumWidth = 6;
+            this.RoleNames.Name = "RoleNames";
+            this.RoleNames.Width = 125;
+            // 
+            // Status
+            // 
+            this.Status.DataPropertyName = "Status";
+            this.Status.HeaderText = "Status";
+            this.Status.MinimumWidth = 6;
+            this.Status.Name = "Status";
+            this.Status.Width = 125;
             // 
             // btnShow
             // 
@@ -117,5 +162,9 @@
         private TextBox txtName;
         private Label lblUsername;
         private Label lblName;
+        private DataGridViewTextBoxColumn Ime;
+        private DataGridViewTextBoxColumn Prezime;
+        private DataGridViewTextBoxColumn RoleNames;
+        private DataGridViewCheckBoxColumn Status;
     }
 }

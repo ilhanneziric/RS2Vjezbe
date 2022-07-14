@@ -24,6 +24,7 @@ namespace eProdaja.Services
         {
             var entity = Context.Set<TDb>().AsQueryable();
             entity = AddFilter(entity, search);
+            entity = AddInclude(entity, search);
 
             if(search.Page.HasValue == true && search.PageSize.HasValue == true)
             {
@@ -33,8 +34,13 @@ namespace eProdaja.Services
 
             var list = entity.ToList();
 
-            //NODE: elaborate IEnumerable vs IList
+            //NOTE: elaborate IEnumerable vs IList
             return Mapper.Map<IList<T>>(list);
+        }
+
+        public virtual IQueryable<TDb> AddInclude(IQueryable<TDb> query, TSearch search = null)
+        {
+            return query;
         }
 
         public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query,TSearch search = null)
