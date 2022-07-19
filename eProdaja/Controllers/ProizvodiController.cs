@@ -2,6 +2,7 @@
 using eProdaja.Model.Requests;
 using eProdaja.Model.SearchObjects;
 using eProdaja.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eProdaja.Controllers
@@ -28,6 +29,15 @@ namespace eProdaja.Controllers
         public List<string> AllowedActions(int id)
         {
             var result = ProizvodiService.AllowedActions(id);
+            return result;
+            //return ProizvodiService.AllowedActions(id); ovo on nije stavio ali ako budem radio copy paste da ne bi promaklo
+        }
+
+        [HttpGet("{id}/Recommed")]
+        [AllowAnonymous]
+        public List<Proizvodi> Recommed(int id)
+        {
+            var result = ProizvodiService.Recommed(id);
             return result;
             //return ProizvodiService.AllowedActions(id); ovo on nije stavio ali ako budem radio copy paste da ne bi promaklo
         }

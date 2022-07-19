@@ -13,5 +13,6 @@ namespace eProdaja.Services
     {
         Proizvodi Activate(int id);
         List<string> AllowedActions(int id);
+        List<Proizvodi> Recommed(int id);
     }
 }
