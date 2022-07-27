@@ -1,11 +1,15 @@
 import 'package:eprodajamobile/providers/product_provider.dart';
 import 'package:eprodajamobile/screens/products/product_list_screen.dart';
+import 'package:eprodajamobile/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'providers/user_provider.dart';
 
 void main() => runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: true,
@@ -20,8 +24,13 @@ void main() => runApp(MultiProvider(
     ));
 
 class HomePage extends StatelessWidget {
+  TextEditingController _usernameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+  late UserProvider _userProvider;
+
   @override
   Widget build(BuildContext context) {
+    _userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           title: Text("Flutter Row Example"),
@@ -81,6 +90,7 @@ class HomePage extends StatelessWidget {
                     decoration: BoxDecoration(
                         border: Border(bottom: BorderSide(color: Colors.grey))),
                     child: TextField(
+                      controller: _usernameController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Email or phone",
@@ -90,6 +100,7 @@ class HomePage extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(8),
                     child: TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Password",
@@ -112,8 +123,25 @@ class HomePage extends StatelessWidget {
                     Color.fromRGBO(143, 148, 251, .6)
                   ])),
               child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, ProductListScreen.routeName);
+                onTap: () async {
+                  try {
+                    Authorization.username = _usernameController.text;
+                    Authorization.password = _passwordController.text;
+                    await _userProvider.get();
+                    Navigator.pushNamed(context, ProductListScreen.routeName);
+                  } catch (e) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                    child: Text("OK"),
+                                    onPressed: () => Navigator.pop(context))
+                              ],
+                            ));
+                  }
                 },
                 child: Center(child: Text("Login")),
               ),
