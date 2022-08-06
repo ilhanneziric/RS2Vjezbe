@@ -7,6 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/product.dart';
+import '../../providers/cart_provider.dart';
+import '../../widgets/eprodaja_drawer.dart';
+import '../../widgets/master_screen.dart';
+import 'product_details_screen.dart';
 
 class ProductListScreen extends StatefulWidget {
   static const String routeName = "/products";
@@ -19,6 +23,7 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   ProductProvider? _productProvider = null;
+  CartProvider? _cartProvider = null;
   List<Product> data = [];
   TextEditingController _searchController = new TextEditingController();
 
@@ -27,6 +32,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     // TODO: implement initState
     super.initState();
     _productProvider = context.read<ProductProvider>();
+    _cartProvider = context.read<CartProvider>();
     print("Called initState");
     loadDate();
   }
@@ -42,8 +48,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     print("Called build data .$data");
-    return Scaffold(
-        body: SafeArea(
+    return MasterScreenWidget(
       child: SingleChildScrollView(
           child: Container(
         child: Column(
@@ -66,7 +71,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ],
         ),
       )),
-    ));
+    );
   }
 
   Widget _buildHeader() {
@@ -131,13 +136,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
     List<Widget> list = data
         .map((x) => Container(
               child: Column(children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  child: imageFromBase64String(x.slika!),
-                ),
+                InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context,
+                          "${ProductDetailsScreen.routeName}/${x.proizvodId}");
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      child: imageFromBase64String(x.slika!),
+                    )),
                 Text(x.naziv ?? ""),
                 Text(formatNumber(x.cijena)),
+                IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    _cartProvider?.addToCart(x);
+                  },
+                )
               ]),
             ))
         .cast<Widget>()

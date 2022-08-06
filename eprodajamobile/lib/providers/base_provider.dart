@@ -34,6 +34,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     Map<String, String> headers = createHeaders();
 
+    // var jsonRequest = jsonEncode(request);
+
     var response = await http!.get(url, headers: headers);
 
     if (isValidResponseCode(response)) {

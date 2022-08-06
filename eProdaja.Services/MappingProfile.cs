@@ -18,6 +18,7 @@ namespace eProdaja.Services
             CreateMap<Database.VrsteProizvodum, Model.VrsteProizvodum>();
             CreateMap<Database.Uloge, Model.Uloge>();
             CreateMap<Database.KorisniciUloge, Model.KorisniciUloge>();
+            CreateMap<Database.Narudzbe, Model.Narudzbe>();
 
             CreateMap<ProizvodiInsertRequest, Database.Proizvodi>();
             CreateMap<ProizvodiUpdateRequest, Database.Proizvodi>();
@@ -25,6 +26,8 @@ namespace eProdaja.Services
             CreateMap<VrsteProizvodumUpsertRequest, Database.VrsteProizvodum>();
             CreateMap<KorisniciInsertRequest, Database.Korisnici>();
             CreateMap<KorisniciUpdateRequest, Database.Korisnici>();
+            CreateMap<NarudzbeInsertRequest, Database.Narudzbe>();
+            CreateMap<NarudzbeUpdateRequest, Database.Narudzbe>();
         }
     }
 }
